@@ -15,8 +15,7 @@ class NotesListViewController: UIViewController, UITableViewDelegate, UITableVie
     
     var isSortNewToOld = true
     
-    let realm = try! Realm()
-    var list: NotesList!
+    let database = Database()
     var filteredNotes = [Note]()
     
     private let searchController = UISearchController(searchResultsController: nil)
@@ -28,23 +27,11 @@ class NotesListViewController: UIViewController, UITableViewDelegate, UITableVie
         
         setupNavigationBar()
         setupSearchBar()
-        
-        bindListToRealm()
     }
     
     static func instance() -> UINavigationController {
         let storyboard = UIStoryboard(name: String(describing: self), bundle: nil)
         return storyboard.instantiateInitialViewController() as! UINavigationController
-    }
-    
-    private func bindListToRealm() {
-        let numberOfObjects = realm.objects(NotesList.self).count
-        if numberOfObjects == 0 {
-            try! realm.write {
-                realm.add(NotesList())
-            }
-        }
-        list = realm.objects(NotesList.self).first!
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -90,23 +77,27 @@ extension NotesListViewController {
     }
     
     private func makeNewToOldAction(for tableView: UITableView) -> UIAlertAction {
-        return UIAlertAction(title: "От новых к старым", style: .default) { [unowned self] _ in
+        let newToOld = UIAlertAction(title: "От новых к старым", style: .default) { [unowned self] _ in
             if !self.isSortNewToOld {
                 self.isSortNewToOld = true
-                try! self.realm.write { self.list.source.reverse() }
+                self.database.reverseNotesCollection()
             }
             tableView.reloadData()
         }
+        newToOld.setValue(isSortNewToOld, forKey: "checked")
+        return newToOld
     }
     
     private func makeOldToNewAction(for tableView: UITableView) -> UIAlertAction {
-        return UIAlertAction(title: "От старых к новым", style: .default) { [unowned self] _ in
+        let oldToNew = UIAlertAction(title: "От старых к новым", style: .default) { [unowned self] _ in
             if self.isSortNewToOld {
                 self.isSortNewToOld = false
-                try! self.realm.write { self.list.source.reverse() }
+                self.database.reverseNotesCollection()
             }
             tableView.reloadData()
         }
+        oldToNew.setValue(!isSortNewToOld, forKey: "checked")
+        return oldToNew
     }
     
     private func makeCancelAction() -> UIAlertAction {
@@ -119,7 +110,7 @@ extension NotesListViewController {
         if isFiltering {
             return filteredNotes.count
         } else {
-            return list.source.count
+            return database.notesCount
         }
     }
     
@@ -129,7 +120,7 @@ extension NotesListViewController {
         if isFiltering {
             shortNote = ShortNote(from: filteredNotes[indexPath.row])
         } else {
-            shortNote = ShortNote(from: list.source[indexPath.row])
+            shortNote = ShortNote(from: database[indexPath.row]!)
         }
         
         let cell = tableView.dequeueReusableCell(withIdentifier: CellNote.reuseIdentifier) as! CellNote
@@ -163,9 +154,9 @@ extension NotesListViewController: UISearchResultsUpdating {
     }
     
     func updateSearchResults(for searchController: UISearchController) {
-        filteredNotes = list.source.filter { note -> Bool in
+        filteredNotes = database.filterNotes { note -> Bool in
             return note.text.lowercased().contains(searchController.searchBar.text!.lowercased())
-        }
+            }
         tableView.reloadData()
     }
 }
@@ -180,11 +171,9 @@ extension NotesListViewController {
         let action = UIContextualAction(style: .destructive, title: "Delete") { [unowned self] _, _, completion in
             if self.isFiltering {
                 let reference = self.filteredNotes.remove(at: indexPath.row)
-                self.deleteNote(from: self.list.source, forReference: reference)
+                self.database.deleteNote(forReference: reference)
             } else {
-                try! self.realm.write {
-                    self.list.source.remove(at: indexPath.row)
-                }
+                self.database.deleteNote(at: indexPath.row)
             }
             
             self.tableView.deleteRows(at: [indexPath], with: .automatic)
@@ -194,14 +183,5 @@ extension NotesListViewController {
         
         return action
     }
-    
-    private func deleteNote(from source: List<Note>, forReference reference: Note) {
-        for i in 0..<source.count {
-            let note = source[i]
-            if note.isSameObject(as: reference) {
-                try! self.realm.write {  source.remove(at: i) }
-                break
-            }
-        }
-    }
 }
+

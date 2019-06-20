@@ -17,6 +17,7 @@ class CreateNoteViewController: UIViewController, UITextViewDelegate {
         textView.delegate = self
         
         setupNavigationBar()
+        scrollDownIfTextCrossOverKeyboard()
         
         textView.text = ""
         textView.becomeFirstResponder()
@@ -25,6 +26,10 @@ class CreateNoteViewController: UIViewController, UITextViewDelegate {
     static func instance() -> CreateNoteViewController {
         let storyboard = UIStoryboard(name: String(describing: self), bundle: nil)
         return storyboard.instantiateInitialViewController() as! CreateNoteViewController
+    }
+    
+    deinit {
+        removeScrollDownIfTextCrossOverKeyboard()
     }
 }
 
@@ -49,15 +54,40 @@ extension CreateNoteViewController {
         }
         
         let note = Note(text: textView.text)
-        try! backViewController.realm.write {
-            if backViewController.isSortNewToOld {
-                backViewController.list.source.insert(note, at: 0)
-            } else {
-                backViewController.list.source.append(note)
-            }
-        }
+        backViewController.database.addNote(note, toBeginning: backViewController.isSortNewToOld)
         backViewController.tableView.reloadData()
         
         backViewController.navigationController?.popViewController(animated: true)
+    }
+}
+
+extension CreateNoteViewController {
+    
+    private func scrollDownIfTextCrossOverKeyboard() {
+        NotificationCenter.default.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
+    }
+    
+    @objc private func adjustForKeyboard(notification: Notification) {
+        guard let keyboardValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
+        
+        let keyboardScreenEndFrame = keyboardValue.cgRectValue
+        let keyboardViewEndFrame = view.convert(keyboardScreenEndFrame, from: view.window)
+        
+        if notification.name == UIResponder.keyboardWillHideNotification {
+            textView.contentInset = .zero
+        } else {
+            textView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: keyboardViewEndFrame.height - view.safeAreaInsets.bottom, right: 0)
+        }
+        
+        textView.scrollIndicatorInsets = textView.contentInset
+        
+        let selectedRange = textView.selectedRange
+        textView.scrollRangeToVisible(selectedRange)
+    }
+    
+    private func removeScrollDownIfTextCrossOverKeyboard() {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
 }

@@ -9,5 +9,5 @@
 import RealmSwift
 
 class NotesList: Object {
-    var source = List<Note>()
+    var list = List<Note>()
 }
