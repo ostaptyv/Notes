@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -23,21 +23,10 @@
 		524EF0482285E25600E416EB /* CellNote.swift in Sources */ = {isa = PBXBuildFile; fileRef = 524EF0472285E25600E416EB /* CellNote.swift */; };
 		524EF04A2285FD5800E416EB /* CreateNoteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 524EF0492285FD5800E416EB /* CreateNoteViewController.swift */; };
 		524EF04C2285FD7A00E416EB /* CreateNoteViewController.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 524EF04B2285FD7A00E416EB /* CreateNoteViewController.storyboard */; };
-		527EECA42295E01B0029D52C /* NotesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 527EECA32295E01B0029D52C /* NotesTests.swift */; };
 		52AD457D228AC70A00D19EEB /* sort icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 52AD457C228AC70A00D19EEB /* sort icon.png */; };
 		52D07F0C22BBBBA100D8D6A6 /* NoteConformable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52D07F0B22BBBBA100D8D6A6 /* NoteConformable.swift */; };
 		A240C84331615D610B7F5564 /* Pods_Notes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EFDF2E2A75840C8F7EACD4F3 /* Pods_Notes.framework */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		527EECA62295E01B0029D52C /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 524EF0182285C22E00E416EB /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 524EF01F2285C22E00E416EB;
-			remoteInfo = Notes;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		52211FB222BB8FF1005AE878 /* Database.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Database.swift; sourceTree = "<group>"; };
@@ -58,9 +47,6 @@
 		524EF0472285E25600E416EB /* CellNote.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellNote.swift; sourceTree = "<group>"; };
 		524EF0492285FD5800E416EB /* CreateNoteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateNoteViewController.swift; sourceTree = "<group>"; };
 		524EF04B2285FD7A00E416EB /* CreateNoteViewController.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = CreateNoteViewController.storyboard; sourceTree = "<group>"; };
-		527EECA12295E01B0029D52C /* NotesTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NotesTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		527EECA32295E01B0029D52C /* NotesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesTests.swift; sourceTree = "<group>"; };
-		527EECA52295E01B0029D52C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		52AD457C228AC70A00D19EEB /* sort icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "sort icon.png"; sourceTree = "<group>"; };
 		52D07F0B22BBBBA100D8D6A6 /* NoteConformable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteConformable.swift; sourceTree = "<group>"; };
 		A0A070AADF67C9EACB6CB1C0 /* Pods-Notes.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Notes.release.xcconfig"; path = "Target Support Files/Pods-Notes/Pods-Notes.release.xcconfig"; sourceTree = "<group>"; };
@@ -74,13 +60,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				A240C84331615D610B7F5564 /* Pods_Notes.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		527EEC9E2295E01B0029D52C /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -107,7 +86,6 @@
 			isa = PBXGroup;
 			children = (
 				524EF0222285C22E00E416EB /* Notes */,
-				527EECA22295E01B0029D52C /* NotesTests */,
 				524EF0212285C22E00E416EB /* Products */,
 				E290ABBB0E6AB8124D63026A /* Pods */,
 				523D19A1BA18A01FA8151B3C /* Frameworks */,
@@ -118,7 +96,6 @@
 			isa = PBXGroup;
 			children = (
 				524EF0202285C22E00E416EB /* Notes.app */,
-				527EECA12295E01B0029D52C /* NotesTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -189,15 +166,6 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
-		527EECA22295E01B0029D52C /* NotesTests */ = {
-			isa = PBXGroup;
-			children = (
-				527EECA32295E01B0029D52C /* NotesTests.swift */,
-				527EECA52295E01B0029D52C /* Info.plist */,
-			);
-			path = NotesTests;
-			sourceTree = "<group>";
-		};
 		52D07F0A22BBB48F00D8D6A6 /* Protocols */ = {
 			isa = PBXGroup;
 			children = (
@@ -237,24 +205,6 @@
 			productReference = 524EF0202285C22E00E416EB /* Notes.app */;
 			productType = "com.apple.product-type.application";
 		};
-		527EECA02295E01B0029D52C /* NotesTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 527EECAA2295E01B0029D52C /* Build configuration list for PBXNativeTarget "NotesTests" */;
-			buildPhases = (
-				527EEC9D2295E01B0029D52C /* Sources */,
-				527EEC9E2295E01B0029D52C /* Frameworks */,
-				527EEC9F2295E01B0029D52C /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				527EECA72295E01B0029D52C /* PBXTargetDependency */,
-			);
-			name = NotesTests;
-			productName = NotesTests;
-			productReference = 527EECA12295E01B0029D52C /* NotesTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -263,14 +213,10 @@
 			attributes = {
 				LastSwiftUpdateCheck = 1020;
 				LastUpgradeCheck = 1020;
-				ORGANIZATIONNAME = Ostap;
+				ORGANIZATIONNAME = OstapTyvonovych;
 				TargetAttributes = {
 					524EF01F2285C22E00E416EB = {
 						CreatedOnToolsVersion = 10.2.1;
-					};
-					527EECA02295E01B0029D52C = {
-						CreatedOnToolsVersion = 10.2.1;
-						TestTargetID = 524EF01F2285C22E00E416EB;
 					};
 				};
 			};
@@ -288,7 +234,6 @@
 			projectRoot = "";
 			targets = (
 				524EF01F2285C22E00E416EB /* Notes */,
-				527EECA02295E01B0029D52C /* NotesTests */,
 			);
 		};
 /* End PBXProject section */
@@ -305,13 +250,6 @@
 				524EF02E2285C23000E416EB /* LaunchScreen.storyboard in Resources */,
 				524EF02B2285C23000E416EB /* Assets.xcassets in Resources */,
 				524EF0412285D15D00E416EB /* Main.storyboard in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		527EEC9F2295E01B0029D52C /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -378,23 +316,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		527EEC9D2295E01B0029D52C /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				527EECA42295E01B0029D52C /* NotesTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		527EECA72295E01B0029D52C /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 524EF01F2285C22E00E416EB /* Notes */;
-			targetProxy = 527EECA62295E01B0029D52C /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		524EF02C2285C23000E416EB /* LaunchScreen.storyboard */ = {
@@ -536,7 +458,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = Ostap.Notes;
+				PRODUCT_BUNDLE_IDENTIFIER = OstapTyvonovych.Notes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -555,48 +477,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = Ostap.Notes;
+				PRODUCT_BUNDLE_IDENTIFIER = OstapTyvonovych.Notes;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		527EECA82295E01B0029D52C /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = NotesTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = Ostap.NotesTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Notes.app/Notes";
-			};
-			name = Debug;
-		};
-		527EECA92295E01B0029D52C /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = NotesTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-					"@loader_path/Frameworks",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = Ostap.NotesTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Notes.app/Notes";
 			};
 			name = Release;
 		};
@@ -617,15 +501,6 @@
 			buildConfigurations = (
 				524EF0332285C23000E416EB /* Debug */,
 				524EF0342285C23000E416EB /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		527EECAA2295E01B0029D52C /* Build configuration list for PBXNativeTarget "NotesTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				527EECA82295E01B0029D52C /* Debug */,
-				527EECA92295E01B0029D52C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
