@@ -16,7 +16,7 @@ class ShortNote {
         self.date = date
         
         if text.count > 100 {
-            var array = [Character](text)
+            let array = [Character](text)
             self.text = String(array[0..<100]) + "..."
         } else {
             self.text = text
