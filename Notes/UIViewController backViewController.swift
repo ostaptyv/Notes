@@ -2,8 +2,8 @@
 //  UIViewController backViewController.swift
 //  Notes
 //
-//  Created by user149331 on 5/10/19.
-//  Copyright © 2019 Ostap. All rights reserved.
+//  Created by Ostap Tyvonovych on 10.05.2019.
+//  Copyright © 2019 OstapTyvonovych. All rights reserved.
 //
 
 import UIKit

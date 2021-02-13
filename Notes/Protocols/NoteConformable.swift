@@ -2,8 +2,8 @@
 //  NoteConformable.swift
 //  Notes
 //
-//  Created by user149331 on 6/20/19.
-//  Copyright © 2019 Ostap. All rights reserved.
+//  Created by Ostap Tyvonovych on 20.06.2019.
+//  Copyright © 2019 OstapTyvonovych. All rights reserved.
 //
 
 protocol NoteConformable {

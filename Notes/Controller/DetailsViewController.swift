@@ -2,8 +2,8 @@
 //  DetailsViewController.swift
 //  Notes
 //
-//  Created by user149331 on 5/11/19.
-//  Copyright © 2019 Ostap. All rights reserved.
+//  Created by Ostap Tyvonovych on 11.05.2019.
+//  Copyright © 2019 OstapTyvonovych. All rights reserved.
 //
 
 import UIKit
