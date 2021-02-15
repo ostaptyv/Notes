@@ -23,7 +23,7 @@ class ShortNote {
         }
     }
     
-    convenience init(from note: NoteConformable) {
+    convenience init(from note: NoteProtocol) {
         self.init(text: note.text, time: note.time, date: note.date)
     }
 }

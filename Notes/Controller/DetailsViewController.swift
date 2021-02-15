@@ -89,8 +89,7 @@ extension DetailsViewController {
         self.navigationItem.rightBarButtonItem = makeEditButton()
         textView.isEditable = false
         
-        backViewController.database.updateNote(text: textView.text, forNote: currrentNote)
-        
+        backViewController.database.updateNote(currrentNote, withText: textView.text)
         backViewController.tableView.reloadData()
     }
 }

@@ -15,7 +15,7 @@ class NotesListViewController: UIViewController, UITableViewDelegate, UITableVie
     
     var isSortNewToOld = true
     
-    let database = Database()
+    let database: Database<Note> = DatabaseRealm.shared
     var filteredNotes = [Note]()
     
     private let searchController = UISearchController(searchResultsController: nil)
@@ -123,7 +123,7 @@ extension NotesListViewController {
             shortNote = ShortNote(from: database[indexPath.row]!)
         }
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: CellNote.reuseIdentifier) as! CellNote
+        let cell = tableView.dequeueReusableCell(withIdentifier: NotesListTableViewCell.reuseIdentifier) as! NotesListTableViewCell
         cell.shortTextLabel.numberOfLines = 3
         
         cell.shortTextLabel.text = shortNote.text
@@ -156,7 +156,7 @@ extension NotesListViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         filteredNotes = database.filterNotes { note -> Bool in
             return note.text.lowercased().contains(searchController.searchBar.text!.lowercased())
-            }
+        }
         tableView.reloadData()
     }
 }
@@ -170,8 +170,8 @@ extension NotesListViewController {
     private func makeDeleteAction(at indexPath: IndexPath) -> UIContextualAction {
         let action = UIContextualAction(style: .destructive, title: "Delete") { [unowned self] _, _, completion in
             if self.isFiltering {
-                let reference = self.filteredNotes.remove(at: indexPath.row)
-                self.database.deleteNote(forReference: reference)
+                let noteToDelete = self.filteredNotes.remove(at: indexPath.row)
+                self.database.deleteNote(noteToDelete)
             } else {
                 self.database.deleteNote(at: indexPath.row)
             }

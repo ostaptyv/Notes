@@ -1,5 +1,5 @@
 //
-//  CellNote.swift
+//  NotesListTableViewCell.swift
 //  Notes
 //
 //  Created by Ostap Tyvonovych on 10.05.2019.
@@ -8,8 +8,8 @@
 
 import UIKit
 
-class CellNote: UITableViewCell {
-    static let reuseIdentifier = "CellNote"
+class NotesListTableViewCell: UITableViewCell {
+    static let reuseIdentifier = "NotesListTableViewCell"
     
     @IBOutlet weak var shortTextLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!

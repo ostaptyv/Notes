@@ -1,12 +1,12 @@
 //
-//  NoteConformable.swift
+//  NoteProtocol.swift
 //  Notes
 //
 //  Created by Ostap Tyvonovych on 20.06.2019.
 //  Copyright © 2019 OstapTyvonovych. All rights reserved.
 //
 
-protocol NoteConformable {
+protocol NoteProtocol {
     var text: String { get }
     var time: String { get }
     var date: String { get }

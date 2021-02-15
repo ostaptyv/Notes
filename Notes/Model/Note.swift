@@ -8,7 +8,7 @@
 
 import RealmSwift
 
-class Note: Object, NoteConformable {
+class Note: Object, NoteProtocol {
     @objc dynamic var text = ""
     @objc dynamic var time = ""
     @objc dynamic var date = ""
