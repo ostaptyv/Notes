@@ -13,6 +13,9 @@ class DetailsViewController: UIViewController {
     @IBOutlet weak var textView: UITextView!
     
     private var row: Int!
+    private var database: Database<Note> {
+        return DatabaseRealm.shared
+    }
     
     private var backViewController: NotesListViewController {
         return self.backViewController() as! NotesListViewController
@@ -22,7 +25,7 @@ class DetailsViewController: UIViewController {
         if backViewController.isFiltering {
             return backViewController.filteredNotes[row]
         } else {
-            return backViewController.database[row]!
+            return database[row]!
         }
     }
     
@@ -89,7 +92,7 @@ extension DetailsViewController {
         self.navigationItem.rightBarButtonItem = makeEditButton()
         textView.isEditable = false
         
-        backViewController.database.updateNote(currrentNote, withText: textView.text)
+        database.updateNote(currrentNote, withText: textView.text)
         backViewController.tableView.reloadData()
     }
 }

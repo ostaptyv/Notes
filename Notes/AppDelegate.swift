@@ -12,6 +12,9 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    private var database: Database<Note> {
+        return DatabaseRealm.shared
+    }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         let rootViewController = NotesListViewController.instance()
@@ -32,7 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let notesListVC = navigationVC.viewControllers.first! as! NotesListViewController
         
         if !notesListVC.isSortNewToOld {
-            notesListVC.database.reverseNotesCollection()
+            database.reverseNotesCollection()
         }
         /*
          Since initial value of isSortNewToOld property in NotesListViewController is true, we should take care about to return the state of the system to appropriate this value (basically here and further we will working out case when isSortNewToOld can be "false" because when isSortNewToOld is "true" nothing bad happens).
@@ -49,7 +52,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let notesListVC = navigationVC.viewControllers.first! as! NotesListViewController
         
         if !notesListVC.isSortNewToOld {
-            notesListVC.database.reverseNotesCollection()
+            database.reverseNotesCollection()
         }
     }
 

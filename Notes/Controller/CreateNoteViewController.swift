@@ -12,6 +12,10 @@ class CreateNoteViewController: UIViewController, UITextViewDelegate {
 
     @IBOutlet weak var textView: UITextView!
     
+    private var database: Database<Note> {
+        return DatabaseRealm.shared
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         textView.delegate = self
@@ -54,7 +58,7 @@ extension CreateNoteViewController {
         }
         
         let note = Note(text: textView.text)
-        backViewController.database.addNote(note, toBeginning: backViewController.isSortNewToOld)
+        database.addNote(note, toBeginning: backViewController.isSortNewToOld)
         backViewController.tableView.reloadData()
         
         backViewController.navigationController?.popViewController(animated: true)

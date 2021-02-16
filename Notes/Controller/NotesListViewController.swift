@@ -14,9 +14,11 @@ class NotesListViewController: UIViewController, UITableViewDelegate, UITableVie
     @IBOutlet weak var tableView: UITableView!
     
     var isSortNewToOld = true
-    
-    let database: Database<Note> = DatabaseRealm.shared
     var filteredNotes = [Note]()
+    
+    private var database: Database<Note> {
+        return DatabaseRealm.shared
+    }
     
     private let searchController = UISearchController(searchResultsController: nil)
     
