@@ -17,17 +17,19 @@ class DetailsViewController: UIViewController {
         return DatabaseRealm.shared
     }
     
-    private var backViewController: NotesListViewController {
+    private var notesListViewController: NotesListViewController {
         return self.backViewController() as! NotesListViewController
     }
     
     private var currrentNote: Note {
-        if backViewController.isFiltering {
-            return backViewController.filteredNotes[row]
+        if notesListViewController.isFiltering {
+            return notesListViewController.filteredNotes[row]
         } else {
             return database[row]!
         }
     }
+    
+    // MARK: - View controller lifecycle methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,6 +40,8 @@ class DetailsViewController: UIViewController {
         textView.isEditable = false
         textView.text = currrentNote.text
     }
+    
+    // MARK: - Factory method for creating instances of the view controller
     
     static func instance(forRow row: Int) -> DetailsViewController {
         let storyboard = UIStoryboard(name: String(describing: self), bundle: nil)
@@ -54,26 +58,26 @@ class DetailsViewController: UIViewController {
         self.navigationItem.rightBarButtonItems = [editIcon, shareIcon]
     }
     
-    deinit {
-        removeScrollDownIfTextCrossOverKeyboard()
-    }
-}
-
-extension DetailsViewController {
+    // MARK: - Factory methods
+    
     private func makeShareButton() -> UIBarButtonItem {
         return UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(shareTapped))
     }
+    
+    private func makeEditButton() -> UIBarButtonItem {
+        return UIBarButtonItem(title: "Редактировать", style: .plain, target: self, action: #selector(editTapped))
+    }
+    
+    private func makeDoneButton() -> UIBarButtonItem {
+        return UIBarButtonItem(title: "Готово", style: .plain, target: self, action: #selector(doneTapped))
+    }
+    
+    // MARK: - Corresponding to button taps
     
     @objc private func shareTapped() {
         let activityView = UIActivityViewController(activityItems: [currrentNote.text], applicationActivities: [])
         present(activityView, animated: true)
         
-    }
-}
-
-extension DetailsViewController {
-    private func makeEditButton() -> UIBarButtonItem {
-        return UIBarButtonItem(title: "Редактировать", style: .plain, target: self, action: #selector(editTapped))
     }
     
     @objc private func editTapped() {
@@ -81,23 +85,16 @@ extension DetailsViewController {
         textView.isEditable = true
         textView.becomeFirstResponder()
     }
-}
-
-extension DetailsViewController {
-    private func makeDoneButton() -> UIBarButtonItem {
-        return UIBarButtonItem(title: "Готово", style: .plain, target: self, action: #selector(doneTapped))
-    }
     
     @objc private func doneTapped() {
         self.navigationItem.rightBarButtonItem = makeEditButton()
         textView.isEditable = false
         
         database.updateNote(currrentNote, withText: textView.text)
-        backViewController.tableView.reloadData()
+        notesListViewController.tableView.reloadData()
     }
-}
-
-extension DetailsViewController {
+    
+    // MARK: - Code which adjusts keyboard when the text view go out the frame view
     
     private func scrollDownIfTextCrossOverKeyboard() {
         NotificationCenter.default.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -105,7 +102,9 @@ extension DetailsViewController {
     }
     
     @objc private func adjustForKeyboard(notification: Notification) {
-        guard let keyboardValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
+        guard let keyboardValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else {
+            return
+        }
         
         let keyboardScreenEndFrame = keyboardValue.cgRectValue
         let keyboardViewEndFrame = view.convert(keyboardScreenEndFrame, from: view.window)
@@ -120,10 +119,5 @@ extension DetailsViewController {
         
         let selectedRange = textView.selectedRange
         textView.scrollRangeToVisible(selectedRange)
-    }
-    
-    private func removeScrollDownIfTextCrossOverKeyboard() {
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
 }

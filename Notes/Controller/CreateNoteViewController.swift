@@ -16,6 +16,8 @@ class CreateNoteViewController: UIViewController, UITextViewDelegate {
         return DatabaseRealm.shared
     }
     
+    // MARK: - View controller lifecycle methods
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         textView.delegate = self
@@ -27,17 +29,15 @@ class CreateNoteViewController: UIViewController, UITextViewDelegate {
         textView.becomeFirstResponder()
     }
     
+    // MARK: - Factory method for creating instances of the view controller
+    
     static func instance() -> CreateNoteViewController {
         let storyboard = UIStoryboard(name: String(describing: self), bundle: nil)
         return storyboard.instantiateInitialViewController() as! CreateNoteViewController
     }
     
-    deinit {
-        removeScrollDownIfTextCrossOverKeyboard()
-    }
-}
-
-extension CreateNoteViewController {
+    // MARK: - Methods to setup some specific UI
+    
     private func setupNavigationBar() {
         self.navigationItem.largeTitleDisplayMode = .never
         
@@ -48,6 +48,8 @@ extension CreateNoteViewController {
     private func makeSaveIcon() -> UIBarButtonItem {
         return UIBarButtonItem(title: "Сохранить", style: .plain, target: self, action: #selector(saveTapped))
     }
+    
+    // MARK: - Corresponding to button taps
     
     @objc private func saveTapped() {
         let backViewController = self.backViewController() as! NotesListViewController
@@ -63,9 +65,8 @@ extension CreateNoteViewController {
         
         backViewController.navigationController?.popViewController(animated: true)
     }
-}
-
-extension CreateNoteViewController {
+    
+    // MARK: - Code which adjusts keyboard when the text view go out the frame view
     
     private func scrollDownIfTextCrossOverKeyboard() {
         NotificationCenter.default.addObserver(self, selector: #selector(adjustForKeyboard), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -73,7 +74,9 @@ extension CreateNoteViewController {
     }
     
     @objc private func adjustForKeyboard(notification: Notification) {
-        guard let keyboardValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else { return }
+        guard let keyboardValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else {
+            return
+        }
         
         let keyboardScreenEndFrame = keyboardValue.cgRectValue
         let keyboardViewEndFrame = view.convert(keyboardScreenEndFrame, from: view.window)
@@ -88,10 +91,5 @@ extension CreateNoteViewController {
         
         let selectedRange = textView.selectedRange
         textView.scrollRangeToVisible(selectedRange)
-    }
-    
-    private func removeScrollDownIfTextCrossOverKeyboard() {
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillChangeFrameNotification, object: nil)
     }
 }
