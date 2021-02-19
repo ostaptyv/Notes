@@ -17,8 +17,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        let rootViewController = NotesListViewController.instance()
-        self.window?.rootViewController = rootViewController
         return true
     }
     
