@@ -9,18 +9,29 @@
 import UIKit
 import RealmSwift
 
-class NotesListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource  {
+class NotesListViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, UISearchResultsUpdating {
 
     @IBOutlet weak var tableView: UITableView!
     
     var isSortNewToOld = true
-    var filteredNotes = [Note]()
+    
+    private let searchController = UISearchController(searchResultsController: nil)
+    private var searchBarIsEmpty: Bool {
+        guard let text = searchController.searchBar.text else {
+            return true
+        }
+        return text.isEmpty
+    }
+    internal var filteredNotes = [Note]()
+    internal var isFiltering: Bool {
+        return searchController.isActive && !searchBarIsEmpty
+    }
     
     private var database: Database<Note> {
         return DatabaseRealm.shared
     }
     
-    private let searchController = UISearchController(searchResultsController: nil)
+    // MARK: - View controller lifecycle methods
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,20 +42,15 @@ class NotesListViewController: UIViewController, UITableViewDelegate, UITableVie
         setupSearchBar()
     }
     
+    // MARK: - Factory method for creating instances of the view controller
+    
     static func instance() -> UINavigationController {
         let storyboard = UIStoryboard(name: String(describing: self), bundle: nil)
         return storyboard.instantiateInitialViewController() as! UINavigationController
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        
-        let vc = DetailsViewController.instance(forRow: indexPath.row)
-        navigationController?.pushViewController(vc, animated: true)
-    }
-}
-
-extension NotesListViewController {
+    // MARK: - Methods to setup some specific UI
+    
     private func setupNavigationBar() {
         self.navigationController?.navigationBar.prefersLargeTitles = true
         
@@ -53,29 +59,22 @@ extension NotesListViewController {
         self.navigationItem.rightBarButtonItems = [addIcon, sortIcon]
     }
     
+    private func setupSearchBar() {
+        searchController.searchResultsUpdater = self
+        
+        searchController.obscuresBackgroundDuringPresentation = false
+        navigationItem.searchController = searchController
+        definesPresentationContext = true
+    }
+    
+    // MARK: - Factory methods
+    
     private func makeAddIcon() -> UIBarButtonItem {
         return UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(createNote))
     }
     
-    @objc private func createNote() {
-        let vc = CreateNoteViewController.instance()
-        self.navigationController?.pushViewController(vc, animated: true)
-    }
-}
-
-extension NotesListViewController {
     private func makeSortIcon() -> UIBarButtonItem {
         return UIBarButtonItem(image: UIImage(named: "sort icon"), style: .plain, target: self, action: #selector(sortTapped))
-    }
-    
-    @objc private func sortTapped() {
-        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        
-        alert.addAction(makeNewToOldAction(for: self.tableView))
-        alert.addAction(makeOldToNewAction(for: self.tableView))
-        alert.addAction(makeCancelAction())
-        
-        self.present(alert, animated: true, completion: nil)
     }
     
     private func makeNewToOldAction(for tableView: UITableView) -> UIAlertAction {
@@ -105,9 +104,26 @@ extension NotesListViewController {
     private func makeCancelAction() -> UIAlertAction {
         return UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
     }
-}
-
-extension NotesListViewController {
+    
+    // MARK: - Corresponding to button taps
+    
+    @objc private func createNote() {
+        let vc = CreateNoteViewController.instance()
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc private func sortTapped() {
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        alert.addAction(makeNewToOldAction(for: self.tableView))
+        alert.addAction(makeOldToNewAction(for: self.tableView))
+        alert.addAction(makeCancelAction())
+        
+        self.present(alert, animated: true, completion: nil)
+    }
+    
+    // MARK: - Table view data source methods
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if isFiltering {
             return filteredNotes.count
@@ -133,37 +149,16 @@ extension NotesListViewController {
         
         return cell
     }
-}
-
-extension NotesListViewController {
-    private func setupSearchBar() {
-        searchController.searchResultsUpdater = self
+    
+    // MARK: - Table view delegate methods
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         
-        searchController.obscuresBackgroundDuringPresentation = false
-        navigationItem.searchController = searchController
-        definesPresentationContext = true
-    }
-}
-
-extension NotesListViewController: UISearchResultsUpdating {
-    private var searchBarIsEmpty: Bool {
-        guard let text = searchController.searchBar.text else { return true }
-        return text.isEmpty
+        let vc = DetailsViewController.instance(forRow: indexPath.row)
+        navigationController?.pushViewController(vc, animated: true)
     }
     
-    var isFiltering: Bool {
-        return searchController.isActive && !searchBarIsEmpty
-    }
-    
-    func updateSearchResults(for searchController: UISearchController) {
-        filteredNotes = database.filterNotes { note -> Bool in
-            return note.text.lowercased().contains(searchController.searchBar.text!.lowercased())
-        }
-        tableView.reloadData()
-    }
-}
-
-extension NotesListViewController {
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let delete = makeDeleteAction(at: indexPath)
         return UISwipeActionsConfiguration(actions: [delete])
@@ -185,5 +180,13 @@ extension NotesListViewController {
         
         return action
     }
+    
+    // MARK: - UISearchResultsUpdating protocol implementation
+    
+    func updateSearchResults(for searchController: UISearchController) {
+        filteredNotes = database.filterNotes { note -> Bool in
+            return note.text.lowercased().contains(searchController.searchBar.text!.lowercased())
+        }
+        tableView.reloadData()
+    }
 }
-
