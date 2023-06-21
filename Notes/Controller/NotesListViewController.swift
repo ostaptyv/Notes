@@ -30,6 +30,9 @@ class NotesListViewController: UIViewController, UITableViewDelegate, UITableVie
     private var database: Database<Note> {
         return DatabaseRealm.shared
     }
+    private var userDefaults: UserDefaults {
+        return UserDefaults.standard
+    }
     
     // MARK: - View controller lifecycle methods
     
@@ -37,6 +40,14 @@ class NotesListViewController: UIViewController, UITableViewDelegate, UITableVie
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
+        
+        if let isSortNewToOldUncasted = userDefaults.value(forKey: .isSortNewToOldKey) {
+            if let isSortNewToOld = isSortNewToOldUncasted as? Bool {
+                self.isSortNewToOld = isSortNewToOld
+            }
+        } else {
+            userDefaults.setValue(isSortNewToOld, forKey: .isSortNewToOldKey)
+        }
         
         setupNavigationBar()
         setupSearchBar()
@@ -78,27 +89,23 @@ class NotesListViewController: UIViewController, UITableViewDelegate, UITableVie
     }
     
     private func makeNewToOldAction(for tableView: UITableView) -> UIAlertAction {
-        let newToOld = UIAlertAction(title: "От новых к старым", style: .default) { [unowned self] _ in
-            if !self.isSortNewToOld {
-                self.isSortNewToOld = true
-                self.database.reverseNotesCollection()
-            }
-            tableView.reloadData()
+        let result = UIAlertAction(title: "От новых к старым", style: .default) { [weak self] _ in
+            self?.isSortNewToOld = true
+            self?.reverseNotesCollection()
         }
-        newToOld.setValue(isSortNewToOld, forKey: "checked")
-        return newToOld
+        result.setValue(isSortNewToOld, forKey: "checked")
+        
+        return result
     }
     
     private func makeOldToNewAction(for tableView: UITableView) -> UIAlertAction {
-        let oldToNew = UIAlertAction(title: "От старых к новым", style: .default) { [unowned self] _ in
-            if self.isSortNewToOld {
-                self.isSortNewToOld = false
-                self.database.reverseNotesCollection()
-            }
-            tableView.reloadData()
+        let result = UIAlertAction(title: "От старых к новым", style: .default) { [weak self] _ in
+            self?.isSortNewToOld = false
+            self?.reverseNotesCollection()
         }
-        oldToNew.setValue(!isSortNewToOld, forKey: "checked")
-        return oldToNew
+        result.setValue(!isSortNewToOld, forKey: "checked")
+        
+        return result
     }
     
     private func makeCancelAction() -> UIAlertAction {
@@ -181,6 +188,19 @@ class NotesListViewController: UIViewController, UITableViewDelegate, UITableVie
         return action
     }
     
+    // MARK: - Reverse notes list
+    
+    private func reverseNotesCollection() {
+        let userDefaultsIsSortNewToOld = userDefaults.bool(forKey: .isSortNewToOldKey)
+        
+        if self.isSortNewToOld != userDefaultsIsSortNewToOld {
+            userDefaults.set(isSortNewToOld, forKey: .isSortNewToOldKey)
+            
+            database.reverseNotesCollection()
+            tableView.reloadData()
+        }
+    }
+    
     // MARK: - UISearchResultsUpdating protocol implementation
     
     func updateSearchResults(for searchController: UISearchController) {
@@ -189,4 +209,8 @@ class NotesListViewController: UIViewController, UITableViewDelegate, UITableVie
         }
         tableView.reloadData()
     }
+}
+
+extension String {
+    static let isSortNewToOldKey = "isSortNewToOldKey"
 }

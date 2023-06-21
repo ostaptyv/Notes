@@ -6,7 +6,7 @@
 //  Copyright © 2021 OstapTyvonovych. All rights reserved.
 //
 
-// Abstract class. Should be subclassed, t's not intended to use "as is"
+// Abstract class. Should be subclassed, it's not intended to use "as is"
 class Database<Item: NoteProtocol> {
     var notesCount: Int {
         throwFatalError()
@@ -36,6 +36,6 @@ class Database<Item: NoteProtocol> {
     }
     
     private func throwFatalError(file: StaticString = #file, line: UInt = #line) -> Never {
-        return fatalError("Should be overriden in child class", file: file, line: line)
+        return fatalError("Should be overridden in child class", file: file, line: line)
     }
 }
